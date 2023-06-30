@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Do Passkeys Work Here?</title>
+
+</head>
+<body>
+    <h1>Do Passkeys Work Here?</h1>
+    <p>Passkeys work only if a platform authenticator is present. On Apple devices, Conditional UI must also be supported in order for passkeys to work.</p>
+    <p>Passkey support: </p><p id="passkey-support" class="unsupported">No</p>
+    <p>Conditional UI support: </p><p id="conditional-ui-support" class="unsupported">No</p>
+    <p>Platform Authenticator Present: </p><p id="platform-authenticator-support" class="unsupported">No</p>
+
+    <script>
+        const passkeySupport = !!window.PublicKeyCredential;
+        if (passkeySupport) {
+            document.getElementById('passkey-support').innerHTML = "Yes";
+            document.getElementById('passkey-support').setAttribute("class", "supported");
+        } else {
+            document.getElementById('passkey-support').innerHTML = "No";
+            document.getElementById('passkey-support').setAttribute("class", "unsupported");
+        }
+
+        if (passkeySupport) {
+            const platformAuthenticatorSupport = window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(result => {return result});
+            if (platformAuthenticatorSupport) {
+                document.getElementById('platform-authenticator-support').innerHTML = "Yes";
+                document.getElementById('platform-authenticator-support').setAttribute("class", "supported");
+            } else {
+                document.getElementById('platform-authenticator-support').innerHTML = "No";
+                document.getElementById('platform-authenticator-support').setAttribute("class", "unsupported");
+            }
+            const conditionalUiSupport = window.PublicKeyCredential.isConditionalMediationAvailable().then(result => { return result });
+            if (conditionalUiSupport) {
+                document.getElementById('conditional-ui-support').innerHTML = "Yes";
+                document.getElementById('conditional-ui-support').setAttribute("class", "supported");
+            } else {
+                document.getElementById('conditional-ui-support').innerHTML = "No";
+                document.getElementById('conditional-ui-support').setAttribute("class", "unsupported");
+            }
+        }
+    </script>
+    <style>
+        .unsupported {
+            color: red;
+        }
+    
+        .supported {
+            color: green
+        }
+    </style>
+</body>
+
+</html>
